@@ -15,14 +15,17 @@ package main
 
 import (
 	"encoding/csv"
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"os"
 )
 
+type csvfile interface{}
+
 //Read file
-func CSVfile() {
+func CSVfile(csvfile) {
 	//Open file
 	csvfile, err := os.Open("problems.csv")
 	if err != nil {
@@ -64,8 +67,9 @@ func CSVfile() {
 
 func main() {
 	//Set flags
-
+	fileCSV := flag.String("file", "problems.csv", "Doing something")
+	flag.Parse()
 	//Read File
-	CSVfile()
+	CSVfile(fileCSV)
 
 }
