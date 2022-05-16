@@ -10,15 +10,10 @@ import (
 	"time"
 )
 
-//Read file
-func CSVfile(f string) {
-
-}
-
 func main() {
 	var file string
 	flag.StringVar(&file, "file", "problems.csv", "set csv file")
-	flag.Int("time", 30, "set time limit")
+	timeLimit := flag.Int("time", 30, "set time limit")
 	flag.Parse()
 
 	//Open file
@@ -34,7 +29,7 @@ func main() {
 	correct := 0
 	questions := 0
 
-	timer := time.NewTimer(30 * time.Second)
+	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
 
 	for {
 		line, err := r.Read()
@@ -55,7 +50,6 @@ func main() {
 		select {
 		case <-timer.C:
 			os.Exit(1)
-			break
 		case answer := <-ansChannel:
 			if answer == line[1] {
 				correct++
@@ -65,22 +59,21 @@ func main() {
 		questions++
 	}
 
-	fmt.Printf("Math Quiz! Your score was: %v/%v!\n", correct, questions)
+	fmt.Printf("Math Quiz: Your score was: %v/%v!\n", correct, questions)
 
 }
 
 /*
 Part 1
 -> Topic: csvs topic: flags topic: opening files topic: strings
-- Programa que lê um arquivo CSV
-- Flag onde o usuário pode modificar o arquivo
-- Analisar quantas questões estão certas e o total
-- Arquivo com a primeira coluna de pergunta e segunda de resposta na mesma linha
+- Programa que lê um arquivo CSV - OK
+- Flag onde o usuário pode modificar o arquivo - OK
+- Analisar quantas questões estão certas e o total - OK
+- Arquivo com a primeira coluna de pergunta e segunda de resposta na mesma linha - OK
 Part 2
 -> Topic: goroutines topic: channels topic: timers
-- Adicionar um timer de 30 segundos e encerrar se não responder.
-- Apertar Enter antes de começar o tempo a correr
-- Mesmo que a resposta seja errada, passa para a próxima pergunta
+- Adicionar um timer de 30 segundos e encerrar se não responder. - OK
+- Mesmo que a resposta seja errada, passa para a próxima pergunta - OK
 - string trimming (string package)
 - Nova flag para reordenar as perguntas toda vez que o quiz começar
 */
