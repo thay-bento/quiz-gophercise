@@ -16,15 +16,18 @@ func CSVfile(f string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	//Close file
+	defer file.Close()
+
 	r := csv.NewReader(file)
 
 	ansCorrect := 0
-	ansIncorrect := 0
-	nQuestions := 1
 	totalQuestions := 0
 
+	//Set timer
+
 	for {
-		record, err := r.Read()
+		line, err := r.Read()
 		if err == io.EOF {
 			break
 		}
@@ -32,22 +35,20 @@ func CSVfile(f string) {
 			log.Fatal(err)
 		}
 
-		fmt.Printf("Question %v: %v = ", nQuestions, record[0])
-		var answer string
+		fmt.Printf("Question %v: %v = ", totalQuestions+1, line[0])
 
+		var answer string
 		fmt.Scan(&answer)
-		if answer == record[1] {
+
+		if answer == line[1] {
 			ansCorrect++
-		} else {
-			ansIncorrect++
 		}
+
 		totalQuestions++
+
 	}
+
 	fmt.Printf("Math Quiz! Your score was: %v/%v!\n", ansCorrect, totalQuestions)
-	if ansCorrect > ansIncorrect {
-		fmt.Println("Congratulations!")
-	}
-	fmt.Printf("Correct: %v\nIncorrect: %v\n", ansCorrect, ansIncorrect)
 
 }
 
