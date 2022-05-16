@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"sync"
 	"time"
 )
 
@@ -16,11 +15,10 @@ func CSVfile(f string) {
 
 }
 
-var wg sync.WaitGroup
-
 func main() {
 	var file string
 	flag.StringVar(&file, "file", "problems.csv", "set csv file")
+	flag.Int("time", 30, "set time limit")
 	flag.Parse()
 
 	//Open file
@@ -36,8 +34,8 @@ func main() {
 	correct := 0
 	questions := 0
 
-	timer := time.NewTimer(5 * time.Second)
-	ansChannel, q := make(chan string)
+	timer := time.NewTimer(30 * time.Second)
+
 	for {
 		line, err := r.Read()
 		if err == io.EOF {
@@ -47,17 +45,21 @@ func main() {
 			log.Fatal(err)
 		}
 		fmt.Printf("Question %v: %v = ", questions+1, line[0])
-
-		var answer string
-		fmt.Scan(&answer)
+		ansChannel := make(chan string)
+		go func() {
+			var answer string
+			fmt.Scan(&answer)
+			ansChannel <- answer
+		}()
 
 		select {
-		case ansChannel <- answer:
+		case <-timer.C:
+			os.Exit(1)
+			break
+		case answer := <-ansChannel:
 			if answer == line[1] {
 				correct++
 			}
-		case <-timer.C:
-			break
 		}
 
 		questions++
