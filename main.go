@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -39,12 +40,12 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("Question %v: %v = ", questions+1, line[0])
 		ansChannel := make(chan string)
 		go func() {
+			fmt.Printf("Question %v: %v = ", questions+1, line[0])
 			var answer string
 			fmt.Scan(&answer)
-			ansChannel <- answer
+			ansChannel <- strings.TrimSpace(answer)
 		}()
 
 		select {
