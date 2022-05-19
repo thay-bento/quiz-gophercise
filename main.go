@@ -75,6 +75,6 @@ Part 2
 -> Topic: goroutines topic: channels topic: timers
 - Adicionar um timer de 30 segundos e encerrar se não responder. - OK
 - Mesmo que a resposta seja errada, passa para a próxima pergunta - OK
-- string trimming (string package)
+- string trimming (string package) - OK
 - Nova flag para reordenar as perguntas toda vez que o quiz começar
 */
