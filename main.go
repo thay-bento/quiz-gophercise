@@ -45,14 +45,14 @@ func main() {
 			fmt.Printf("Question %v: %v = ", questions+1, line[0])
 			var answer string
 			fmt.Scan(&answer)
-			ansChannel <- strings.TrimSpace(answer)
+			ansChannel <- (answer)
 		}()
 
 		select {
 		case <-timer.C:
 			os.Exit(1)
 		case answer := <-ansChannel:
-			if answer == line[1] {
+			if answer == strings.TrimSpace(line[1]) {
 				correct++
 			}
 		}
